@@ -29,6 +29,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Amp: 0.23
+    - _Freq: 10
     - _Glossiness: 0.493
     - _Metallic: 0
     m_Colors:

@@ -3,7 +3,8 @@ Shader "Unlit/terrain"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Freq ("Frequency", Range(0.1, 10)) = 1
+        _Freq ("Frequency", Range(0.1, 10)) = 10
+        _Amp ("Amplitude", Range(0.1, 10)) = 1
         
     }
     SubShader
@@ -24,6 +25,7 @@ Shader "Unlit/terrain"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _Freq;
+            float _Amp;
 
             struct appdata
             {
@@ -44,7 +46,7 @@ Shader "Unlit/terrain"
             v2f vert (appdata v)
             {
                 v2f o;
-                v.vertex += float4(perlin(v.vertex.xyz, _Freq) * normalize(v.normal), 1.0);
+                v.vertex += _Amp * float4(perlin(v.vertex.xyz, _Freq) * normalize(v.normal), 1.0);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.nDirWS = UnityObjectToWorldNormal( v.normal );
@@ -55,12 +57,14 @@ Shader "Unlit/terrain"
             fixed4 frag (v2f i) : SV_Target
             {
                 // vectors preparation
-                half3 nDotl = dot(i.nDirWS, i.lDirWS);
+                half nDotl = dot(i.nDirWS, i.lDirWS);
+
+                half halfLambert = nDotl * 0.5 + 0.5;
 
                 // lighting
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
+                return halfLambert;
             }
             ENDCG
         }

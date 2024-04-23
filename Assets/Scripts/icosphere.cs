@@ -1,28 +1,58 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
-public class HighResIcosphere : MonoBehaviour
+public class icosphere : MonoBehaviour
 {
-    [Range(0, 7)]
-    public int subdivisions = 3;
-    public float radius = 1f;
+    [Range(0, 8)]
+    [SerializeField]
+    private int _subdivisions = 3;
+    public long radius = 1;
+    // public List<GameObject> icotris = new List<GameObject>();
+    public Dictionary<int, List<GameObject>> icotrisMipMap = new Dictionary<int, List<GameObject>>();
 
+    public List<Vector3> vertices = new List<Vector3>();
+    public List<int> triangles = new List<int>();
+
+    public GameObject icotriPrefab;
+    public int subdivisions {
+        get => _subdivisions;
+        set {
+            if (_subdivisions != value) { // Check if the value is actually changing
+                _subdivisions = Mathf.Clamp(value, 0, 8); // Ensure subdivisions are within a valid range
+                UpdateIcosphere(); // Call the update method if there's a change
+            }
+        }
+    }
     private void Start()
     {
-        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-        meshFilter.mesh = CreateIcosphere(radius, subdivisions);
-
-        MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
-        renderer.material = new Material(Shader.Find("Standard"));
+        UpdateIcosphere();
     }
 
-    Mesh CreateIcosphere(float radius, int subdivisions)
+    void UpdateIcosphere()
     {
-        Mesh mesh = new Mesh();
+        print("Subdivisions: " + subdivisions);
+        var keys = icotrisMipMap.Keys;
+        // cache exists
+        if (keys.Contains(subdivisions)){
+            foreach (int key in keys){
+                if (key != subdivisions){
+                    foreach (GameObject icotriObj in icotrisMipMap[key]){
+                        icotriObj.SetActive(false);
+                    }
+                }
+            }
+            foreach (GameObject icotriObj in icotrisMipMap[subdivisions]){
+                icotriObj.SetActive(true);
+            }
+            
+        }else{
+            CreateIcosphere(radius, subdivisions);
+        }
+    }
 
-        List<Vector3> vertices = new List<Vector3>();
-        List<int> triangles = new List<int>();
-
+    void CreateIcosphere(float radius, int subdivisions)
+    {
         float t = (1f + Mathf.Sqrt(5f)) / 2f;
 
         // Add vertices
@@ -49,55 +79,25 @@ public class HighResIcosphere : MonoBehaviour
             4, 9, 5,  2, 4, 11,  6, 2, 10,  8, 6, 7,  9, 8, 1
         });
 
-        // Subdivide triangles
-        for (int i = 0; i < subdivisions; i++)
+        // create separate game object for each triangle
+        for (int i = 0; i < triangles.Count; i += 3)
         {
-            List<int> newTriangles = new List<int>();
-            Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
-            for (int j = 0; j < triangles.Count; j += 3)
-            {
-                int a = triangles[j];
-                int b = triangles[j + 1];
-                int c = triangles[j + 2];
-
-                int ab = GetMiddlePoint(a, b, vertices, middlePointIndexCache, radius);
-                int bc = GetMiddlePoint(b, c, vertices, middlePointIndexCache, radius);
-                int ca = GetMiddlePoint(c, a, vertices, middlePointIndexCache, radius);
-
-                newTriangles.AddRange(new int[] { a, ab, ca });
-                newTriangles.AddRange(new int[] { b, bc, ab });
-                newTriangles.AddRange(new int[] { c, ca, bc });
-                newTriangles.AddRange(new int[] { ab, bc, ca });
+            GameObject icotriObj = Instantiate(icotriPrefab, Vector3.zero, Quaternion.identity);
+            icotriObj.transform.parent = transform;
+            icotri icotriScript = icotriObj.GetComponent<icotri>();
+            icotriScript.Radius = radius;
+            icotriScript.Subdivisions = subdivisions;
+            icotriScript.Vertices = new Vector3[]{
+                vertices[triangles[i]],
+                vertices[triangles[i + 1]],
+                vertices[triangles[i + 2]]
+            };
+            icotriScript.MeshName = "Icotri" + i;
+            if (icotrisMipMap.ContainsKey(subdivisions)){
+                icotrisMipMap[subdivisions].Add(icotriObj);
+            } else {
+                icotrisMipMap.Add(subdivisions, new List<GameObject>{icotriObj});
             }
-            triangles = newTriangles;
         }
-
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.RecalculateNormals();
-
-        return mesh;
-    }
-
-    int GetMiddlePoint(int p1, int p2, List<Vector3> vertices, Dictionary<long, int> cache, float radius)
-    {
-        long smallerIndex = p1 < p2 ? p1 : p2;
-        long greaterIndex = p1 > p2 ? p1 : p2;
-        long key = (smallerIndex << 32) + greaterIndex;
-
-        if (cache.TryGetValue(key, out int ret))
-        {
-            return ret;
-        }
-
-        Vector3 point1 = vertices[p1];
-        Vector3 point2 = vertices[p2];
-        Vector3 middle = Vector3.Lerp(point1, point2, 0.5f).normalized * radius;
-
-        int i = vertices.Count;
-        vertices.Add(middle);
-        cache.Add(key, i);
-
-        return i;
     }
 }

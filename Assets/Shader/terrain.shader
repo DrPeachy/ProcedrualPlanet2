@@ -59,7 +59,7 @@ Shader "Unlit/terrain"
                 // vectors preparation
                 half nDotl = dot(i.nDirWS, i.lDirWS);
 
-                half halfLambert = nDotl * 0.5 + 0.5;
+                half halfLambert = pow(nDotl * 0.5 + 0.5, 2.0);
 
                 // lighting
                 // sample the texture

@@ -33,15 +33,15 @@ public class icosphere : MonoBehaviour
     {
         print("Subdivisions: " + subdivisions);
         var keys = icotrisMipMap.Keys;
-        // cache exists
-        if (keys.Contains(subdivisions)){
-            foreach (int key in keys){
-                if (key != subdivisions){
-                    foreach (GameObject icotriObj in icotrisMipMap[key]){
-                        icotriObj.SetActive(false);
-                    }
+        foreach (int key in keys){
+            if (key != subdivisions){
+                foreach (GameObject icotriObj in icotrisMipMap[key]){
+                    icotriObj.SetActive(false);
                 }
             }
+        }
+        // cache exists
+        if (keys.Contains(subdivisions)){
             foreach (GameObject icotriObj in icotrisMipMap[subdivisions]){
                 icotriObj.SetActive(true);
             }

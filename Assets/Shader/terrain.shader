@@ -4,7 +4,7 @@ Shader "Unlit/terrain"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Freq ("Frequency", Range(0.1, 10)) = 10
-        _Amp ("Amplitude", Range(0.1, 10)) = 1
+        [PowerSlider(3)]_Amp ("Amplitude", Range(0, 1.2)) = 0
         _Seed ("Seed", Range(0, 100)) = 0
         
     }
@@ -18,6 +18,7 @@ Shader "Unlit/terrain"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma target 5.0
             #include "UnityCG.cginc"
             #include "cginc/utils.cginc"
 

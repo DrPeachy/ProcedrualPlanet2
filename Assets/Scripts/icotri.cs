@@ -10,26 +10,30 @@ public class icotri : MonoBehaviour
     private string meshName;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int> triangles = new List<int>();
-    public float Radius{
+    public float Radius
+    {
         get { return radius; }
         set { radius = value; }
     }
 
-    public int Subdivisions{
+    public int Subdivisions
+    {
         get { return subdivisions; }
         set { subdivisions = value; }
     }
 
-    public Vector3[] Vertices{
+    public Vector3[] Vertices
+    {
         get { return vertices.ToArray(); }
         set { vertices = new List<Vector3>(value); }
     }
 
-    public string MeshName{
+    public string MeshName
+    {
         get { return meshName; }
         set { meshName = value; }
     }
-    
+
     void Start()
     {
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
@@ -39,51 +43,56 @@ public class icotri : MonoBehaviour
         renderer.material = material;
     }
 
-    public 
+    public
 
-Mesh CreateIcotri(float radius, int subdivisions)
-{
-    Mesh mesh = new Mesh();
-    mesh.name = meshName;
-
-    // Initial triangle setup
-    triangles.Add(0);
-    triangles.Add(1);
-    triangles.Add(2);
-
-    if (subdivisions > 0)
+    Mesh CreateIcotri(float radius, int subdivisions)
     {
-        // Subdivisions
-        for (int i = 0; i < subdivisions; i++)
+        Mesh mesh = new Mesh();
+        mesh.name = meshName;
+
+        // Initial triangle setup
+        triangles.Add(0);
+        triangles.Add(1);
+        triangles.Add(2);
+
+        if (subdivisions > 0)
         {
-            List<int> newTriangles = new List<int>();
-            Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
-            for (int j = 0; j < triangles.Count; j += 3)
+            // Subdivisions
+            for (int i = 0; i < subdivisions; i++)
             {
-                int a = triangles[j];
-                int b = triangles[j + 1];
-                int c = triangles[j + 2];
+                List<int> newTriangles = new List<int>();
+                Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
+                for (int j = 0; j < triangles.Count; j += 3)
+                {
+                    int a = triangles[j];
+                    int b = triangles[j + 1];
+                    int c = triangles[j + 2];
 
-                int ab = GetMiddlePoint(a, b, vertices, middlePointIndexCache, radius);
-                int bc = GetMiddlePoint(b, c, vertices, middlePointIndexCache, radius);
-                int ca = GetMiddlePoint(c, a, vertices, middlePointIndexCache, radius);
+                    int ab = GetMiddlePoint(a, b, vertices, middlePointIndexCache, radius);
+                    int bc = GetMiddlePoint(b, c, vertices, middlePointIndexCache, radius);
+                    int ca = GetMiddlePoint(c, a, vertices, middlePointIndexCache, radius);
 
-                newTriangles.AddRange(new int[] { a, ab, ca });
-                newTriangles.AddRange(new int[] { b, bc, ab });
-                newTriangles.AddRange(new int[] { c, ca, bc });
-                newTriangles.AddRange(new int[] { ab, bc, ca });
+                    newTriangles.AddRange(new int[] { a, ab, ca });
+                    newTriangles.AddRange(new int[] { b, bc, ab });
+                    newTriangles.AddRange(new int[] { c, ca, bc });
+                    newTriangles.AddRange(new int[] { ab, bc, ca });
+                }
+                triangles = newTriangles;
             }
-            triangles = newTriangles;
         }
+
+        // Assign vertices and triangles to mesh
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        Vector3[] normals = new Vector3[vertices.Count];
+        for (int i = 0; i < normals.Length; i++)
+        {
+            normals[i] = vertices[i].normalized;  // Normal is the normalized position vector
+        }
+        mesh.normals = normals;
+
+        return mesh;
     }
-
-    // Assign vertices and triangles to mesh
-    mesh.vertices = vertices.ToArray();
-    mesh.triangles = triangles.ToArray();
-    mesh.RecalculateNormals(); // Ensure the normals are recalculated after changes
-
-    return mesh;
-}
     int GetMiddlePoint(int p1, int p2, List<Vector3> vertices, Dictionary<long, int> cache, float radius)
     {
         long smallerIndex = p1 < p2 ? p1 : p2;

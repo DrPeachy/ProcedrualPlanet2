@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e9b08ddf582334fbccfbe02300ff1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subdivisions: 8
-  radius: 1
-  icotris: []
+  _subdivisions: 8
+  radius: 3.5
   vertices: []
   triangles: 
   icotriPrefab: {fileID: 5406132871887106790, guid: 6eab83e77f9672f49a7df0c68efe044e,

@@ -29,10 +29,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amp: 0.23
-    - _Freq: 10
+    - _Amp: 0
+    - _Freq: 3.1
     - _Glossiness: 0.493
     - _Metallic: 0
+    - _Seed: 8
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

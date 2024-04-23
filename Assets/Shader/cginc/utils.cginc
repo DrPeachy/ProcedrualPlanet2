@@ -96,4 +96,31 @@
         return lerp(nxy0, nxy1, w.z);
     }
 
+    float3 hash3(float3 p) {
+        p = frac(p * 0.3183099 + float3(0.1,0.9,0.5));
+        p += dot(p, p + 19.19);
+        return -1.0 + 2.0 * frac(sin(p) * 43758.5453123);
+    }
+    
+    // Voronoi noise function
+    float voronoi(float3 position, float scale) {
+        float3 p = position * scale;
+        float3 f = floor(p);
+        float res = 8.0;  // Initial large distance
+    
+        for (int k = -1; k <= 1; k++) {
+            for (int j = -1; j <= 1; j++) {
+                for (int i = -1; i <= 1; i++) {
+                    float3 b = float3(i, j, k);
+                    float3 r = b - (frac(p) - hash3(f + b));
+                    float d = dot(r, r);
+    
+                    res = min(res, d);
+                }
+            }
+        }
+        return res;
+    }
+
+
 #endif

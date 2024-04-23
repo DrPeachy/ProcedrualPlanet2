@@ -7,7 +7,7 @@ public class icosphere : MonoBehaviour
     [Range(0, 8)]
     [SerializeField]
     private int _subdivisions = 3;
-    public long radius = 1;
+    public float radius = 3.5f;
     // public List<GameObject> icotris = new List<GameObject>();
     public Dictionary<int, List<GameObject>> icotrisMipMap = new Dictionary<int, List<GameObject>>();
 

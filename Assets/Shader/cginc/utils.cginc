@@ -46,13 +46,13 @@
     }
 
     // Hash function
-    float3 hash(float3 p)
+    float3 hash(float3 p, float seed)
     {
-        p = float3(dot(p, float3(127.1, 311.7, 74.7)),
-                dot(p, float3(269.5, 183.3, 246.1)),
-                dot(p, float3(113.5, 271.9, 124.6)));
-
-        return -1.0 + 2.0 * frac(sin(p) * 43758.5453123);
+        p = float3(dot(p, float3(127.1, 311.7, 74.7) + seed),
+                   dot(p, float3(269.5, 183.3, 246.1) + seed),
+                   dot(p, float3(113.5, 271.9, 124.6) + seed));
+    
+        return -1.0 + 2.0 * frac(sin(p) * (43758.5453123 + seed));
     }
 
     // Linear interpolation
@@ -69,21 +69,21 @@
     }
 
     // Perlin noise function
-    float perlin(float3 p, float freq)
+    float perlin(float3 p, float freq, float seed)
     {
         p *= freq;
         float3 pi = floor(p);
         float3 pf = p - pi;
         float3 w = pf * pf * (3 - 2 * pf);
 
-        float n000 = dot(hash(pi + float3(0, 0, 0)), pf - float3(0, 0, 0));
-        float n100 = dot(hash(pi + float3(1, 0, 0)), pf - float3(1, 0, 0));
-        float n010 = dot(hash(pi + float3(0, 1, 0)), pf - float3(0, 1, 0));
-        float n110 = dot(hash(pi + float3(1, 1, 0)), pf - float3(1, 1, 0));
-        float n001 = dot(hash(pi + float3(0, 0, 1)), pf - float3(0, 0, 1));
-        float n101 = dot(hash(pi + float3(1, 0, 1)), pf - float3(1, 0, 1));
-        float n011 = dot(hash(pi + float3(0, 1, 1)), pf - float3(0, 1, 1));
-        float n111 = dot(hash(pi + float3(1, 1, 1)), pf - float3(1, 1, 1));
+        float n000 = dot(hash(pi + float3(0, 0, 0), seed), pf - float3(0, 0, 0));
+        float n100 = dot(hash(pi + float3(1, 0, 0), seed), pf - float3(1, 0, 0));
+        float n010 = dot(hash(pi + float3(0, 1, 0), seed), pf - float3(0, 1, 0));
+        float n110 = dot(hash(pi + float3(1, 1, 0), seed), pf - float3(1, 1, 0));
+        float n001 = dot(hash(pi + float3(0, 0, 1), seed), pf - float3(0, 0, 1));
+        float n101 = dot(hash(pi + float3(1, 0, 1), seed), pf - float3(1, 0, 1));
+        float n011 = dot(hash(pi + float3(0, 1, 1), seed), pf - float3(0, 1, 1));
+        float n111 = dot(hash(pi + float3(1, 1, 1), seed), pf - float3(1, 1, 1));
 
         float nx00 = lerp(n000, n100, w.x);
         float nx01 = lerp(n001, n101, w.x);

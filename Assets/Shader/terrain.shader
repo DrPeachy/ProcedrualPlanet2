@@ -5,6 +5,7 @@ Shader "Unlit/terrain"
         _MainTex ("Texture", 2D) = "white" {}
         _Freq ("Frequency", Range(0.1, 10)) = 10
         _Amp ("Amplitude", Range(0.1, 10)) = 1
+        _Seed ("Seed", Range(0, 100)) = 0
         
     }
     SubShader
@@ -26,6 +27,7 @@ Shader "Unlit/terrain"
             float4 _MainTex_ST;
             float _Freq;
             float _Amp;
+            float _Seed;
 
             struct appdata
             {
@@ -46,7 +48,7 @@ Shader "Unlit/terrain"
             v2f vert (appdata v)
             {
                 v2f o;
-                v.vertex += _Amp * float4(perlin(v.vertex.xyz, _Freq) * normalize(v.normal), 1.0);
+                v.vertex += _Amp * float4(perlin(v.vertex.xyz, _Freq, _Seed) * normalize(v.normal), 1.0);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.nDirWS = UnityObjectToWorldNormal( v.normal );

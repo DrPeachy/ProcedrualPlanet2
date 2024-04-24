@@ -25,7 +25,7 @@ Material:
     m_TexEnvs:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 8a02da037e672254d9db782a334084ed, type: 3}
-        m_Scale: {x: 4, y: 1}
+        m_Scale: {x: 4, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - _MatCapGrass:
         m_Texture: {fileID: 2800000, guid: 5ceb08d8cf031324e956781255d383e1, type: 3}
@@ -45,7 +45,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amp: 0.324
+    - _Amp: 0.823
     - _EnvSpecIntensity: 0.728
     - _Freq: 0.85
     - _FresnelPower: 0.32

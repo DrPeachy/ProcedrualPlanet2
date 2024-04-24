@@ -17,6 +17,7 @@ public class icosphere : MonoBehaviour
     public List<int> triangles = new List<int>();
 
     public GameObject icotriPrefab;
+    public Material material;
     private bool initiated = false;
     public int subdivisions {
         get => _subdivisions;
@@ -125,6 +126,7 @@ public class icosphere : MonoBehaviour
                 vertices[triangles[i + 1]],
                 vertices[triangles[i + 2]]
             };
+            icotriScript.Material = material;
             icotriScript.MeshName = "Icotri" + i;
             if (icotrisMipMap.ContainsKey(subdivisions)){
                 icotrisMipMap[subdivisions].Add(icotriObj);

@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class icotri : MonoBehaviour
 {
-    public Material material;
+    private Material material;
     private float radius;
     private int subdivisions;
     private string meshName;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int> triangles = new List<int>();
+
+    public Material Material
+    {
+        get { return material; }
+        set { material = value; }
+    }
     public float Radius
     {
         get { return radius; }
@@ -92,8 +98,8 @@ public class icotri : MonoBehaviour
             normals[i] = vertices[i].normalized;  // Normal is the normalized position vector
 
             Vector3 vertex = vertices[i];
-        float u = Mathf.Atan2(vertex.z, vertex.x) / (2 * Mathf.PI) + 0.5f;
-        float v = vertex.y * 0.5f + 0.5f;
+            float u = Mathf.Atan2(vertex.z, vertex.x) / (2 * Mathf.PI) + 0.5f;
+            float v = vertex.y * 0.5f + 0.5f;
             uvs[i] = new Vector2(u, v);
         }
         mesh.normals = normals;

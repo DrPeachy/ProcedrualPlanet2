@@ -88,7 +88,7 @@ public class icosphere : MonoBehaviour
                 Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
                 for (int j = 0; j < triangles.Count; j += 3)
                 {
-                    yield return new WaitForSeconds(0.0005f * (j / 3) );
+                    yield return new WaitForSeconds(0.0001f * (j / 3) );
                     int a = triangles[j];
                     int b = triangles[j + 1];
                     int c = triangles[j + 2];
@@ -113,7 +113,7 @@ public class icosphere : MonoBehaviour
         // create separate game object for each triangle
         for (int i = 0; i < triangles.Count; i += 3)
         {
-            yield return new WaitForSeconds(0.0005f * i);
+            yield return new WaitForSeconds(0.0001f * i);
             // then create icotri object for each triangle
             GameObject icotriObj = Instantiate(icotriPrefab, Vector3.zero, Quaternion.identity);
             icotriObj.transform.parent = transform;

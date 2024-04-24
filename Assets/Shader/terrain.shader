@@ -57,14 +57,14 @@ Shader "Unlit/terrain"
             v2f vert (appdata v)
             {
                 v2f o;
-                for (int i = 0; i < _Octaves; i++){
-                    // v.vertex += _Amp * float4(perlin(v.vertex.xyz, pow(_Freq, i), _Seed) * normalize(v.normal), 1.0);
+                o.nDirWS = UnityObjectToWorldNormal( v.normal );
+                o.lDirWS = _WorldSpaceLightPos0.xyz;
+
+                for (int i = 0; i < octaves; i++){
                     v.vertex += (1.0 / pow(2, i)) * _Amp * float4(perlin(v.vertex.xyz, _Freq + pow(2.0, i), _Seed) * normalize(v.normal), 1.0);
                 }
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.nDirWS = UnityObjectToWorldNormal( v.normal );
-                o.lDirWS = _WorldSpaceLightPos0.xyz;
                 return o;
             }
 

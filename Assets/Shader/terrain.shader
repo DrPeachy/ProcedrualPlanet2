@@ -9,7 +9,7 @@ Shader "Unlit/terrain"
         [PowerSlider(4)]_Freq ("Frequency", Range(0.1, 5)) = 5
         [PowerSlider(3)]_Amp ("Amplitude", Range(0, 1.2)) = 0
         _Seed ("Seed", Range(0, 100)) = 0
-        [WholeNUmber]_Octaves ("Octaves", Range(1, 5)) = 1
+        [WholeNUmber]_Octaves ("Octaves", Range(1, 8)) = 1
         
     }
     SubShader
@@ -59,7 +59,7 @@ Shader "Unlit/terrain"
                 v2f o;
                 for (int i = 0; i < _Octaves; i++){
                     // v.vertex += _Amp * float4(perlin(v.vertex.xyz, pow(_Freq, i), _Seed) * normalize(v.normal), 1.0);
-                    v.vertex += (1.0 / (i+1.0)) * _Amp * float4(perlin(v.vertex.xyz, _Freq + pow(2.0, i), _Seed) * normalize(v.normal), 1.0);
+                    v.vertex += (1.0 / pow(2, i)) * _Amp * float4(perlin(v.vertex.xyz, _Freq + pow(2.0, i), _Seed) * normalize(v.normal), 1.0);
                 }
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);

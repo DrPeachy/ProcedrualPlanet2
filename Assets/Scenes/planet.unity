@@ -1055,13 +1055,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e9b08ddf582334fbccfbe02300ff1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _subdivisions: 8
+  _subdivisions: 3
   radius: 3.5
   vertices: []
   triangles: 
   icotriPrefab: {fileID: 5406132871887106790, guid: 6eab83e77f9672f49a7df0c68efe044e,
     type: 3}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c0fcc7dc0c48750498bdf2eafd1dc1ee, type: 2}
 --- !u!1 &5055226921800489715
 GameObject:
   m_ObjectHideFlags: 0

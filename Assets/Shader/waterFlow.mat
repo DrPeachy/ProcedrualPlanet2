@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: waterFlow
-  m_Shader: {fileID: 4800000, guid: 780d09044ea807040b9c17fb9e91830d, type: 3}
+  m_Shader: {fileID: 4800000, guid: b6954fb1065afca4790561ab5d4aebc8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,12 +24,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _FlowMap:
-        m_Texture: {fileID: 2800000, guid: 66f03e840d6af3746b4a4a39d30b850c, type: 3}
+        m_Texture: {fileID: 2800000, guid: c4c535fcb6e3e4d42aae8da4f10799de, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 19b6bd0b63ec1044fb7c956b0a2da5c8, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Texture: {fileID: 2800000, guid: 8f9fb8d8e68425247a7f1ad50da45ffe, type: 3}
+        m_Scale: {x: 10, y: 1.58}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:

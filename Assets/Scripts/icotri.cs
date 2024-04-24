@@ -85,11 +85,19 @@ public class icotri : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         Vector3[] normals = new Vector3[vertices.Count];
+        Vector2[] uvs = new Vector2[vertices.Count];
+
         for (int i = 0; i < normals.Length; i++)
         {
             normals[i] = vertices[i].normalized;  // Normal is the normalized position vector
+
+            Vector3 vertex = vertices[i];
+        float u = Mathf.Atan2(vertex.z, vertex.x) / (2 * Mathf.PI) + 0.5f;
+        float v = vertex.y * 0.5f + 0.5f;
+            uvs[i] = new Vector2(u, v);
         }
         mesh.normals = normals;
+        mesh.uv = uvs;
 
         return mesh;
     }

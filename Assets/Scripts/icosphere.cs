@@ -1,6 +1,8 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class icosphere : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class icosphere : MonoBehaviour
     public List<int> triangles = new List<int>();
 
     public GameObject icotriPrefab;
+    private bool initiated = false;
     public int subdivisions {
         get => _subdivisions;
         set {
@@ -47,41 +50,45 @@ public class icosphere : MonoBehaviour
             }
             
         }else{
-            CreateIcosphere(radius, subdivisions);
+            StartCoroutine(CreateIcosphere(radius, subdivisions));
         }
     }
 
-    void CreateIcosphere(float radius, int subdivisions)
+    IEnumerator CreateIcosphere(float radius, int subdivisions)
     {
-        float t = (1f + Mathf.Sqrt(5f)) / 2f;
+        if (!initiated){
+            float t = (1f + Mathf.Sqrt(5f)) / 2f;
 
-        // Add vertices
-        vertices.Add(new Vector3(-1f,  t,  0f).normalized * radius);
-        vertices.Add(new Vector3( 1f,  t,  0f).normalized * radius);
-        vertices.Add(new Vector3(-1f, -t,  0f).normalized * radius);
-        vertices.Add(new Vector3( 1f, -t,  0f).normalized * radius);
+            // Add vertices
+            vertices.Add(new Vector3(-1f,  t,  0f).normalized * radius);
+            vertices.Add(new Vector3( 1f,  t,  0f).normalized * radius);
+            vertices.Add(new Vector3(-1f, -t,  0f).normalized * radius);
+            vertices.Add(new Vector3( 1f, -t,  0f).normalized * radius);
 
-        vertices.Add(new Vector3( 0f, -1f,  t).normalized * radius);
-        vertices.Add(new Vector3( 0f,  1f,  t).normalized * radius);
-        vertices.Add(new Vector3( 0f, -1f, -t).normalized * radius);
-        vertices.Add(new Vector3( 0f,  1f, -t).normalized * radius);
+            vertices.Add(new Vector3( 0f, -1f,  t).normalized * radius);
+            vertices.Add(new Vector3( 0f,  1f,  t).normalized * radius);
+            vertices.Add(new Vector3( 0f, -1f, -t).normalized * radius);
+            vertices.Add(new Vector3( 0f,  1f, -t).normalized * radius);
 
-        vertices.Add(new Vector3( t,  0f, -1f).normalized * radius);
-        vertices.Add(new Vector3( t,  0f,  1f).normalized * radius);
-        vertices.Add(new Vector3(-t,  0f, -1f).normalized * radius);
-        vertices.Add(new Vector3(-t,  0f,  1f).normalized * radius);
+            vertices.Add(new Vector3( t,  0f, -1f).normalized * radius);
+            vertices.Add(new Vector3( t,  0f,  1f).normalized * radius);
+            vertices.Add(new Vector3(-t,  0f, -1f).normalized * radius);
+            vertices.Add(new Vector3(-t,  0f,  1f).normalized * radius);
 
-        // Add triangles
-        triangles.AddRange(new List<int>{
-            0, 11, 5,  0, 5, 1,  0, 1, 7,  0, 7, 10,  0, 10, 11,
-            1, 5, 9,  5, 11, 4,  11, 10, 2,  10, 7, 6,  7, 1, 8,
-            3, 9, 4,  3, 4, 2,  3, 2, 6,  3, 6, 8,  3, 8, 9,
-            4, 9, 5,  2, 4, 11,  6, 2, 10,  8, 6, 7,  9, 8, 1
-        });
+            // Add triangles
+            triangles.AddRange(new List<int>{
+                0, 11, 5,  0, 5, 1,  0, 1, 7,  0, 7, 10,  0, 10, 11,
+                1, 5, 9,  5, 11, 4,  11, 10, 2,  10, 7, 6,  7, 1, 8,
+                3, 9, 4,  3, 4, 2,  3, 2, 6,  3, 6, 8,  3, 8, 9,
+                4, 9, 5,  2, 4, 11,  6, 2, 10,  8, 6, 7,  9, 8, 1
+            });
+            initiated = true;
+        }
 
         // create separate game object for each triangle
         for (int i = 0; i < triangles.Count; i += 3)
         {
+            yield return new WaitForSeconds(0.001f * i);
             GameObject icotriObj = Instantiate(icotriPrefab, Vector3.zero, Quaternion.identity);
             icotriObj.transform.parent = transform;
             icotri icotriScript = icotriObj.GetComponent<icotri>();
